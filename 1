@@ -1,0 +1,28 @@
+class MyApp(App):
+    def build(self):
+        layout = BoxLayout(orientation='vertical')
+
+        self.txt_input = TextInput()
+        layout.add_widget(self.txt_input)
+
+        btn = Button(text="Run", on_press=self.on_button_click)
+        layout.add_widget(btn)
+
+        return layout
+
+    def on_button_click(self, instance):
+        code = self.txt_input.text
+        old_stdout = sys.stdout
+        redirected_output = sys.stdout = io.StringIO()
+
+        try:
+            exec(code)
+        except Exception as e:
+            print(e)
+
+        sys.stdout = old_stdout
+        print(redirected_output.getvalue())
+
+
+if __name__ == '__main__':
+    MyApp().run()
